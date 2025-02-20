@@ -7,11 +7,11 @@ import RecipeItem from "../../components/RecipeItem";
 
 export default function Home() {
   const allRecipes = useLoaderData(); // ✅ Fetch data at the Home level
-  console.log("Fetched Recipes:", allRecipes);
-  if (!Array.isArray(allRecipes)) {
+    console.log("Fetched Recipes:", allRecipes);
+    if (!Array.isArray(allRecipes)) {
     console.error("Error: `allRecipes` is not an array", allRecipes);
-  }
-  
+}
+
 return (
     <>
     <Navbar />

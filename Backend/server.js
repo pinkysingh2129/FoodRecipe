@@ -5,8 +5,7 @@ const connectDb = require("./config/connectionDb");
 const cors = require("cors");
 
 const app = express();
-const PORT = process.env.PORT || 5001; // Fallback if PORT is undefined
- // ✅ Read PORT from .env
+const PORT = process.env.PORT || 5001; 
 const CONNECTION_STRING = process.env.CONNECTION_STRING; // ✅ Read DB URL from .env
 
 // Ensure environment variables are loaded
@@ -25,14 +24,16 @@ connectDb(CONNECTION_STRING)
 
 // Middleware
 app.use(cors({
-    origin: ["http://localhost:5000","http://localhost:5173"], 
+    origin: ["http://localhost:5000","http://localhost:5174","http://localhost:5173"], 
     methods: ["GET", "POST", "PUT", "DELETE"], 
     credentials: true 
 }));// Allow frontend
 app.use(express.json());
 
-
+app.use("/",require("./routes/user"))
 app.use("/recipe", require("./routes/recipe"));
 
 // Start Server
-app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+app.listen(PORT, (err) => 
+    console.log(`Server is running on port ${PORT}`)
+);

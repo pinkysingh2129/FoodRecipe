@@ -18,7 +18,7 @@ export default function RecipeItem({ recipes }) {
           <div className="card-body">
             <div className="title">{item.title || "Untitled Recipe"}</div>
             <div className="icons">
-              <div className="time">
+              <div className="timer">
                 <BiStopwatch /> {item.time || "N/A"}
               </div>
               <IoIosHeart />
