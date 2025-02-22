@@ -8,7 +8,7 @@ export default function Model({children,onClose}){
                 {children}
                 <button onClick={onClose} className="close-btn">Close</button>
             </dialog>
-        </div>
+            </div>
         </>
 
     )

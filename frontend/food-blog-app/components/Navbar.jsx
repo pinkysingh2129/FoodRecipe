@@ -19,9 +19,9 @@ export default function Navbar(){
                     <li onClick={checkLogin} style={{ cursor: "pointer" }}>Login</li>
                 </ul>
             </header>
-            {isOpen &&(
+            {isOpen && (
                 <Modal onClose={() => setIsOpen(false)}>
-                <InputForm/>
+                <InputForm setIsOpen={setIsOpen} />
                 </Modal> 
                 )}
         </>
