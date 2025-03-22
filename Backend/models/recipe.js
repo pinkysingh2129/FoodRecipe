@@ -5,6 +5,9 @@ const recipeSchema = mongoose.Schema({
         type:String,
         require:true
     },
+    time:{
+        type:String,
+    },
     ingredients: {
         type: [String],  // ✅ Correct array type
         required: true
@@ -12,9 +15,6 @@ const recipeSchema = mongoose.Schema({
     instructions:{
         type:String,
         required:true
-    },
-    time:{
-        type:String,
     },
     coverImage:{
         type:String,

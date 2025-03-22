@@ -28,7 +28,9 @@ app.use(cors({
     methods: ["GET", "POST", "PUT", "DELETE"], 
     credentials: true 
 }));// Allow frontend
-app.use(express.json());
+app.use(express.json({ limit: "50mb" })); // Increase JSON limit
+app.use(express.urlencoded({ extended: true  ,limit: "50mb" })); // Increase URL-encoded limit
+
 
 app.use("/",require("./routes/user"))
 app.use("/recipe", require("./routes/recipe"));

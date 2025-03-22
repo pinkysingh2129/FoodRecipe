@@ -1,21 +1,22 @@
-import React from "react";
+import React, { Suspense } from "react";
 import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Home from "./pages/Home"; // Ensure correct path
-import MainNavigation from "../components/MainNavigation"; // Ensure correct path
+import Home from "./pages/Home"; 
+import MainNavigation from "../components/MainNavigation"; 
 import axios from "axios";
-import { AddFoodRecipe } from "./pages/AddFoodRecipe";
+import AddFoodRecipe from "./pages/AddFoodRecipe";
 
 const getAllRecipes = async () => {
   try {
-    const res = await axios.get("http://localhost:5000/recipe");
-    console.log(res.data);
-    return res.data; // Return fetched data
+    const res = await axios.get("http://localhost:5000/recipe", { cache: "no-cache" }); // 🔄 Ensure fresh data
+    console.log("Fetched Recipes:", res.data);
+    return res.data;
   } catch (error) {
     console.error("Error fetching recipes:", error);
-    return []; // Return empty array in case of error
+    return [];
   }
 };
+
 
 // Define Routes
 const router = createBrowserRouter([
@@ -24,25 +25,31 @@ const router = createBrowserRouter([
     element: <MainNavigation />,
     children: [
       {
-        index: true, // ✅ Default child route
+        index: true,
         element: <Home />,
         loader: getAllRecipes,
       },
-    ],
+  {
+    path: "myRecipe",
+    element: <Home />,
   },
   {
-    path:"/myRecipe" , element:<Home/> 
+    path: "favRecipe",
+    element: <Home />,
   },
   {
-    path:"/favRecipe",element:<Home/>
+    path: "addRecipe",
+    element: <AddFoodRecipe />,
   },
-  {
-    path:"/addRecipe",element:<AddFoodRecipe/>
-  }
+],
+},
 ]);
 
-// Main App Component
+// ✅ Keep only ONE App function
 export default function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <Suspense fallback={<h2>Loading...</h2>}>
+      <RouterProvider router={router} />
+    </Suspense>
+  );
 }
-
