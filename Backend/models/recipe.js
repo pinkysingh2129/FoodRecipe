@@ -3,13 +3,12 @@ const mongoose = require("mongoose")
 const recipeSchema = mongoose.Schema({
     title:{
         type:String,
-        require:true
     },
     time:{
         type:String,
     },
     ingredients: {
-        type: [String],  // ✅ Correct array type
+        type: Array,  // ✅ Correct array type
         required: true
     },    
     instructions:{

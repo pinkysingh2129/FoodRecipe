@@ -14,8 +14,13 @@ export default function RecipeItem({ recipes }) {
     <div className="card-container">
       {recipes.map((item, index) => (
         <div key={index} className="card">
-          <img src={item.coverImage || fooding} width="120px" height="100px" alt="food image" />
-          <div className="card-body">
+          <img
+  src={item.coverImage ? `http://localhost:5000/uploads/${item.coverImage}` : fooding}
+  width="120px"
+  height="100px"
+  alt="food image"
+/>
+<div className="card-body">
             <div className="title">{item.title || "Untitled Recipe"}</div>
             <div className="icons">
               <div className="timer">

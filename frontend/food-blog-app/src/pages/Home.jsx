@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import food2 from "../assets/food2.jpg";
-import Navbar from "../../components/Navbar";
-import Footer from "../../components/Footer";
-import RecipeItem from "../../components/RecipeItem";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import RecipeItem from "../components/RecipeItem";
 import { Link } from "react-router-dom";
 
 export default function Home() {
@@ -37,9 +37,8 @@ export default function Home() {
             cooking tips. Sign up or log in to add your own recipes, save favorites, 
             and explore a variety of cuisines. Start your cooking journey today! 👨‍🍳🔥
           </h5>
-          <Link to="/addRecipe">
-            <button>Share your recipe</button>
-          </Link>
+            <button onClick={()=>navigate("/addRecipe")}>Share your recipe</button>
+          
         </div>
         <div className="right">
           <img src={food2} width="320px" height="300px" alt="Food" />

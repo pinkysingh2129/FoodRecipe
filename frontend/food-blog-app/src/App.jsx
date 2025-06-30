@@ -2,7 +2,7 @@ import React, { Suspense } from "react";
 import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./pages/Home"; 
-import MainNavigation from "../components/MainNavigation"; 
+import MainNavigation from "./components/MainNavigation"; 
 import axios from "axios";
 import AddFoodRecipe from "./pages/AddFoodRecipe";
 
@@ -30,15 +30,15 @@ const router = createBrowserRouter([
         loader: getAllRecipes,
       },
   {
-    path: "myRecipe",
+    path: "/myRecipe",
     element: <Home />,
   },
   {
-    path: "favRecipe",
+    path: "/favRecipe",
     element: <Home />,
   },
   {
-    path: "addRecipe",
+    path: "/addRecipe",
     element: <AddFoodRecipe />,
   },
 ],

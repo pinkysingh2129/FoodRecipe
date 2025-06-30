@@ -3,6 +3,8 @@ require("dotenv").config(); // ✅ Load .env variables at the top
 const express = require("express");
 const connectDb = require("./config/connectionDb");
 const cors = require("cors");
+const multer = require("multer");
+const path = require("path"); 
 
 const app = express();
 const PORT = process.env.PORT || 5001; 
@@ -31,11 +33,11 @@ app.use(cors({
 app.use(express.json({ limit: "50mb" })); // Increase JSON limit
 app.use(express.urlencoded({ extended: true  ,limit: "50mb" })); // Increase URL-encoded limit
 
-
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 app.use("/",require("./routes/user"))
 app.use("/recipe", require("./routes/recipe"));
 
 // Start Server
-app.listen(PORT, (err) => 
+app.listen(PORT, () => 
     console.log(`Server is running on port ${PORT}`)
 );
