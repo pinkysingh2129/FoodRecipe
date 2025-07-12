@@ -17,6 +17,11 @@ const getAllRecipes = async () => {
   }
 };
 
+const getMyRecipe = async ()=>{
+  let user = JSON.parse(localStorage.getItem("user"))
+  let allRecipes=await getAllRecipes()
+  return allRecipes.filter(item=>item.createdBy===user._id)
+}
 
 // Define Routes
 const router = createBrowserRouter([
@@ -30,8 +35,9 @@ const router = createBrowserRouter([
         loader: getAllRecipes,
       },
   {
-    path: "/myRecipe",
-    element: <Home />,
+    path: "/myRecipes",
+    element: <Home/>,
+    loader:getMyRecipe 
   },
   {
     path: "/favRecipe",

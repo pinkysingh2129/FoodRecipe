@@ -18,7 +18,7 @@ export default function AddFoodRecipe() {
 
     setRecipeData(prev => ({ ...prev, [e.target.name]: val }));
 };
- 
+
 
     const onHandleSubmit = async(e) => {
         e.preventDefault()

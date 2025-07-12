@@ -6,8 +6,8 @@ const storage = multer.diskStorage({
     cb(null, './uploads') // ✅ now storing in uploads
 },
     filename: function (req, file, cb) {
-    const filename = Date.now() + '-' + file.fieldname
-    cb(null, filename)
+    const filename = Date.now() + '-' + file.fieldname;
+    cb(null, filename);
     }
 })
 
@@ -38,7 +38,7 @@ const addRecipe=async(req,res)=>{
 
     const newRecipe=await Recipes.create({
         title,ingredients,instructions,time,coverImage:req.file.filename,
-        createdBy: "guest"
+        createdBy: req.user.id
     })
 return res.json(newRecipe);
 }

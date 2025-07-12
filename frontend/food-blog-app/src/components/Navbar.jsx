@@ -6,7 +6,7 @@ import InputForm from "./InputForm";
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const [isLogin, setIsLogin] = useState(false);
-
+    let user = JSON.parse(localStorage.getItem("user"))
     useEffect(() => {
         const checkAuth = () => {
             const token = localStorage.getItem("token");
@@ -45,9 +45,9 @@ export default function Navbar() {
                     </li>
                     <li onClick={() => !isLogin && setIsOpen(true)}>
                         <NavLink to={isLogin ? "/favRecipes" : "/"}>Favourite</NavLink>
-                    </li>
+                    </li> 
                     <li onClick={checkLogin} style={{ cursor: "pointer" }}>
-                        <p className="login">{isLogin ? "Logout" : "Login"}</p>
+                        <p className="login">{isLogin ? "Logout" : "Login"}{user?.email ? `(${user?.email})` : ""}</p>
                     </li>
                 </ul>
             </header>
