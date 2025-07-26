@@ -1,27 +1,33 @@
-const express = require("express")
-const {getRecipes,getRecipe,addRecipe,editRecipe,deleteRecipe,upload} = require("../controller/recipe");
+const express = require("express");
+const {
+  getRecipes,
+  getRecipe,
+  addRecipe,
+  editRecipe,
+  deleteRecipe,
+  upload,
+  getMyRecipes
+} = require("../controller/recipe");
 const verifyToken = require("../middleware/auth");
+
 const router = express.Router();
 
-router.get("/",getRecipes)
-router.get("/:id",getRecipe)
-router.post("/", upload.single("file"), verifyToken ,addRecipe);
+// ✅ PUBLIC: Home page — shows all recipes
+router.get("/", getRecipes);
+
+// ✅ View single recipe by ID
+router.get("/:id", getRecipe);
+
+// ✅ Create recipe (only if logged in)
+router.post("/", verifyToken, upload.single("file"), addRecipe);
+
+// ✅ Update recipe (you can optionally protect this too)
 router.put("/:id", upload.single("file"), editRecipe);
-router.delete("/:id",deleteRecipe)
-// router.post('/recipe', async (req, res) => {
-//     const { title, time, ingredients, instructions } = req.body;
 
-//     if (!title || !time || !ingredients || !instructions) {
-//         return res.status(400).json({ message: "Required fields can't be empty" });
-//     }
+// ✅ Delete recipe
+router.delete("/:id", deleteRecipe);
 
-//     // File Handling (if applicable)
-//     if (!req.file.filename) {
-//         return res.status(400).json({ message: "Image file is required" });
-//     }
+router.get("/my", verifyToken, getMyRecipes)
 
-
-//     // Your logic to save the recipe
-// });
-
-module.exports= router
+// ✅ Correct export (only once)
+module.exports = router;

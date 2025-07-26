@@ -5,6 +5,10 @@ import Home from "./pages/Home";
 import MainNavigation from "./components/MainNavigation"; 
 import axios from "axios";
 import AddFoodRecipe from "./pages/AddFoodRecipe";
+import MyRecipes from "./pages/MyRecipes";
+
+// Inside your <Routes>:
+
 
 const getAllRecipes = async () => {
   try {
@@ -17,11 +21,20 @@ const getAllRecipes = async () => {
   }
 };
 
-const getMyRecipe = async ()=>{
-  let user = JSON.parse(localStorage.getItem("user"))
-  let allRecipes=await getAllRecipes()
-  return allRecipes.filter(item=>item.createdBy===user._id)
-}
+const getMyRecipe = async () => {
+  const user = JSON.parse(localStorage.getItem("user"));
+  if (!user || !user._id) return [];
+
+  try {
+    const res = await axios.get("http://localhost:5000/recipe/my");
+    const allRecipes = res.data;
+
+    return allRecipes.filter(recipe => recipe.createdBy === user._id);
+  } catch (error) {
+    console.error("Error fetching recipes:", error);
+    return [];
+  }
+};
 
 // Define Routes
 const router = createBrowserRouter([
@@ -34,11 +47,11 @@ const router = createBrowserRouter([
         element: <Home />,
         loader: getAllRecipes,
       },
-  {
-    path: "/myRecipes",
-    element: <Home/>,
-    loader:getMyRecipe 
-  },
+  // {
+  //   path: "/myRecipes",
+  //   element: <Home/>,
+  //   loader:getMyRecipe 
+  // },
   {
     path: "/favRecipe",
     element: <Home />,
@@ -47,6 +60,11 @@ const router = createBrowserRouter([
     path: "/addRecipe",
     element: <AddFoodRecipe />,
   },
+  
+{ 
+  path : "/myRecipes", 
+  element : <MyRecipes /> ,
+}
 ],
 },
 ]);
