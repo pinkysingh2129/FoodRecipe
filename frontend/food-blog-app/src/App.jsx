@@ -11,7 +11,7 @@ import EditRecipe from "./pages/EditRecipe";
 // Loader for all recipes (Home page)
 const getAllRecipes = async () => {
   try {
-    const res = await axios.get("http://localhost:5000/recipe", { cache: "no-cache" });
+    const res = await axios.get("https://foodrecipe-4xzl.onrender.com/recipe", { cache: "no-cache" });
     return res.data;
   } catch (error) {
     console.error("Error fetching recipes:", error);
@@ -24,7 +24,7 @@ const getMyRecipe = async () => {
   const user = JSON.parse(localStorage.getItem("user"));
   if (!user || !user._id) return [];
   try {
-    const res = await axios.get("http://localhost:5000/recipe/my");
+    const res = await axios.get("https://foodrecipe-4xzl.onrender.com/recipe/my");
     return res.data.filter(recipe => recipe.createdBy === user._id);
   } catch (error) {
     console.error("Error fetching recipes:", error);

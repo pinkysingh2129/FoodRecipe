@@ -10,7 +10,7 @@ const { id } = useParams();
 useEffect(() => {
     const getData = async () => {
     try {
-        const response = await axios.get(`http://localhost:5000/recipe/${id}`);
+        const response = await axios.get(`https://foodrecipe-4xzl.onrender.com/recipe/${id}`);
         const res = response.data;
         setRecipeData({
         title: res.title,
@@ -49,7 +49,7 @@ const onHandleSubmit = async (e) => {
     if (recipeData.file) formData.append("file", recipeData.file); // Only append if changed
 
     try {
-    await axios.put(`http://localhost:5000/recipe/${id}`, recipeData, {
+    await axios.put(`https://foodrecipe-4xzl.onrender.com/recipe/${id}`, recipeData, {
         headers: {
         "Content-Type": "multipart/form-data",
         "authorization": "bearer " + localStorage.getItem("token")

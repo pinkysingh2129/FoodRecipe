@@ -11,7 +11,7 @@ const MyRecipes = () => {
     const fetchMyRecipes = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get("http://localhost:5000/recipe/my", {
+        const res = await axios.get("https://foodrecipe-4xzl.onrender.com/recipe/my", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -35,7 +35,7 @@ const MyRecipes = () => {
 
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:5000/recipe/${id}`, {
+      await axios.delete(`https://foodrecipe-4xzl.onrender.com/recipe/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -70,7 +70,7 @@ const MyRecipes = () => {
                 </button>
               </div>
               <img
-                src={`http://localhost:5000/uploads/${recipe.coverImage}`}
+                src={`https://foodrecipe-4xzl.onrender.com/uploads/${recipe.coverImage}`}
                 alt={recipe.title}
                 className="recipe-img"
               />

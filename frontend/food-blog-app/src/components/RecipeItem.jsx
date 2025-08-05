@@ -76,7 +76,7 @@ export default function RecipeItem({
             className="recipe-img"
             src={
               item.coverImage
-                ? `http://localhost:5000/uploads/${item.coverImage}`
+                ? `https://foodrecipe-4xzl.onrender.com/uploads/${item.coverImage}`
                 : fooding
             }
             alt="food"
