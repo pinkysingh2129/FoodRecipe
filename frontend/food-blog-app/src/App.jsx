@@ -1,19 +1,17 @@
 import React, { Suspense } from "react";
 import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Home from "./pages/Home"; 
-import MainNavigation from "./components/MainNavigation"; 
+import Home from "./pages/Home";
+import MainNavigation from "./components/MainNavigation";
 import axios from "axios";
 import AddFoodRecipe from "./pages/AddFoodRecipe";
 import MyRecipes from "./pages/MyRecipes";
+import EditRecipe from "./pages/EditRecipe";
 
-// Inside your <Routes>:
-
-
+// Loader for all recipes (Home page)
 const getAllRecipes = async () => {
   try {
-    const res = await axios.get("http://localhost:5000/recipe", { cache: "no-cache" }); // 🔄 Ensure fresh data
-    console.log("Fetched Recipes:", res.data);
+    const res = await axios.get("http://localhost:5000/recipe", { cache: "no-cache" });
     return res.data;
   } catch (error) {
     console.error("Error fetching recipes:", error);
@@ -21,22 +19,24 @@ const getAllRecipes = async () => {
   }
 };
 
+// Loader for My Recipes
 const getMyRecipe = async () => {
   const user = JSON.parse(localStorage.getItem("user"));
   if (!user || !user._id) return [];
-
   try {
     const res = await axios.get("http://localhost:5000/recipe/my");
-    const allRecipes = res.data;
-
-    return allRecipes.filter(recipe => recipe.createdBy === user._id);
+    return res.data.filter(recipe => recipe.createdBy === user._id);
   } catch (error) {
     console.error("Error fetching recipes:", error);
     return [];
   }
 };
 
-// Define Routes
+// Loader for Favourites
+const getFavRecipes = () => {
+  return JSON.parse(localStorage.getItem("fav")) || [];
+};
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -44,32 +44,35 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Home />,
+        element: <Home isFavPage={false} />, // ✅ Explicitly mark as NOT fav page
         loader: getAllRecipes,
       },
-  // {
-  //   path: "/myRecipes",
-  //   element: <Home/>,
-  //   loader:getMyRecipe 
-  // },
-  {
-    path: "/favRecipe",
-    element: <Home />,
+      {
+        path: "/myRecipes",
+        element: <MyRecipes />,
+        loader: getMyRecipe,
+      },
+      {
+        path: "/favRecipes",
+        element: <Home isFavPage={true} />, // ✅ This tells Home to treat as fav page
+        loader: getFavRecipes,
+      },
+      {
+        path: "/addRecipe",
+        element: <AddFoodRecipe />,
+      },
+      {
+        path: "/editRecipe/:id",
+        element: <EditRecipe />,
+      },
+      {
+        path: "*",
+        element: <h1 style={{ padding: "1rem" }}>404 | Page Not Found</h1>,
+      },
+    ],
   },
-  {
-    path: "/addRecipe",
-    element: <AddFoodRecipe />,
-  },
-  
-{ 
-  path : "/myRecipes", 
-  element : <MyRecipes /> ,
-}
-],
-},
 ]);
 
-// ✅ Keep only ONE App function
 export default function App() {
   return (
     <Suspense fallback={<h2>Loading...</h2>}>

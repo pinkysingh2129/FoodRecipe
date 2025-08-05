@@ -6,19 +6,24 @@ import InputForm from "./InputForm";
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const [isLogin, setIsLogin] = useState(false);
-    let user = JSON.parse(localStorage.getItem("user"))
+    const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
+
     useEffect(() => {
         const checkAuth = () => {
             const token = localStorage.getItem("token");
+            const currentUser = JSON.parse(localStorage.getItem("user"));
             setIsLogin(!!token && token !== "null" && token !== "undefined");
+            setUser(currentUser);
         };
 
         checkAuth();
 
         window.addEventListener("storage", checkAuth);
+        window.addEventListener("userChange", checkAuth);
 
         return () => {
             window.removeEventListener("storage", checkAuth);
+            window.removeEventListener("userChange", checkAuth);
         };
     }, []);
 
@@ -28,6 +33,9 @@ export default function Navbar() {
             localStorage.removeItem("user");
             setIsLogin(false);
             window.dispatchEvent(new Event("storage"));
+            window.dispatchEvent(new Event("userChange"));  // <-- Custom Event to refresh favs
+            // Optional: Force page reload if needed
+            // window.location.reload();
         } else {
             console.log("Opening modal for login...");
             setIsOpen(true);
@@ -45,12 +53,16 @@ export default function Navbar() {
                     </li>
                     <li onClick={() => !isLogin && setIsOpen(true)}>
                         <NavLink to={isLogin ? "/favRecipes" : "/"}>Favourite</NavLink>
-                    </li> 
+                    </li>
                     <li onClick={checkLogin} style={{ cursor: "pointer" }}>
-                        <p className="login">{isLogin ? "Logout" : "Login"}{user?.email ? `(${user?.email})` : ""}</p>
+                        <p className="login">
+                            {isLogin ? "Logout" : "Login"}
+                            {user?.email ? ` (${user?.email})` : ""}
+                        </p>
                     </li>
                 </ul>
             </header>
+
             {isOpen && (
                 <Modal onClose={() => setIsOpen(false)}>
                     <InputForm setIsOpen={setIsOpen} />
