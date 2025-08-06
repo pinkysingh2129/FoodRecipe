@@ -47,38 +47,51 @@ const MyRecipes = () => {
   };
 
   return (
-    <div className="my-recipes-container">
-      <h2>My Recipes</h2>
+    <div className="min-h-screen bg-green-50 px-6 md:px-16 py-10">
+      <h2 className="text-3xl font-bold text-green-600 mb-8 text-center">My Recipes</h2>
+
       {recipes.length === 0 ? (
-        <p className="no-recipe">You haven’t added any recipes yet!</p>
+        <p className="text-center text-gray-600 text-lg">You haven’t added any recipes yet!</p>
       ) : (
-        <div className="recipe-grid">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {recipes.map((recipe) => (
-            <div className="recipe-card" key={recipe._id}>
-              <div className="card-actions">
+            <div
+              key={recipe._id}
+              className="bg-white shadow-md rounded-lg overflow-hidden relative hover:shadow-xl transition duration-300"
+            >
+              {/* Edit/Delete Icons */}
+              <div className="absolute top-2 right-2 flex space-x-2 z-10">
                 <button
-                  className="icon-btn edit-btn"
+                  className="text-green-600 hover:text-green-800"
                   onClick={() => handleEdit(recipe._id)}
                 >
-                  <FiEdit2 />
+                  <FiEdit2 size={20} />
                 </button>
                 <button
-                  className="icon-btn delete-btn"
+                  className="text-red-500 hover:text-red-700"
                   onClick={() => handleDelete(recipe._id)}
                 >
-                  <FiTrash2 />
+                  <FiTrash2 size={20} />
                 </button>
               </div>
+
               <img
                 src={`https://foodrecipe-4xzl.onrender.com/uploads/${recipe.coverImage}`}
                 alt={recipe.title}
-                className="recipe-img"
+                className="w-full h-48 object-cover"
               />
-              <div className="recipe-content">
-                <h3>{recipe.title}</h3>
-                <p><strong>Ingredients:</strong> {recipe.ingredients.join(", ")}</p>
-                <p><strong>Instructions:</strong> {recipe.instructions}</p>
-                <p><strong>Time:</strong> {recipe.time}</p>
+
+              <div className="p-4">
+                <h3 className="text-xl font-semibold text-green-700 mb-2">{recipe.title}</h3>
+                <p className="text-sm text-gray-700 mb-2">
+                  <strong>Ingredients:</strong> {recipe.ingredients.join(", ")}
+                </p>
+                <p className="text-sm text-gray-700 mb-2">
+                  <strong>Instructions:</strong> {recipe.instructions}
+                </p>
+                <p className="text-sm text-gray-600">
+                  <strong>Time:</strong> {recipe.time}
+                </p>
               </div>
             </div>
           ))}

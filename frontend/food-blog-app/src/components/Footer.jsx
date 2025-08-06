@@ -1,9 +1,11 @@
-import React from 'react'
+import React from 'react';
 
-export default function Footer(){
+export default function Footer() {
     return (
-        <div className = 'footer' >
-            <p>@copyright imaginary engineering</p>
-        </div>
-    )
+        <footer className="bg-green-500 text-white text-center py-4 mt-10 shadow-inner">
+            <p className="text-sm font-medium">
+                © {new Date().getFullYear()} Imaginary Engineering. All rights reserved.
+            </p>
+        </footer>
+    );
 }

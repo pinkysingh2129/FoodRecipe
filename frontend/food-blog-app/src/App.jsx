@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import "./App.css";
+// import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./pages/Home";
 import MainNavigation from "./components/MainNavigation";
@@ -21,16 +21,27 @@ const getAllRecipes = async () => {
 
 // Loader for My Recipes
 const getMyRecipe = async () => {
+  const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user"));
-  if (!user || !user._id) return [];
+
+  if (!user || !user._id || !token) {
+    console.warn("User not logged in or token missing.");
+    return [];
+  }
+
   try {
-    const res = await axios.get("https://foodrecipe-4xzl.onrender.com/recipe/my");
+    const res = await axios.get("https://foodrecipe-4xzl.onrender.com/recipe/my", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return res.data.filter(recipe => recipe.createdBy === user._id);
   } catch (error) {
     console.error("Error fetching recipes:", error);
     return [];
   }
 };
+
 
 // Loader for Favourites
 const getFavRecipes = () => {
