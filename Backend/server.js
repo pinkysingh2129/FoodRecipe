@@ -26,7 +26,12 @@ connectDb(CONNECTION_STRING)
 
 // Middleware
 app.use(cors({
-    origin: ["https://food-recipe-o57c-seven.vercel.app","http://localhost:5174","http://localhost:5173"], 
+    origin: [
+        "https://food-recipe-beige.vercel.app",  // ✅ add this
+        "https://food-recipe-o57c-seven.vercel.app", 
+        "http://localhost:5174", 
+        "http://localhost:5173"
+    ],
     methods: ["GET", "POST", "PUT", "DELETE"], 
     credentials: true 
 }));// Allow frontend
