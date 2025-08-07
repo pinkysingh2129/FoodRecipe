@@ -41,7 +41,7 @@ export default function RecipeItem({
     }
     if (onDelete) onDelete(id);
   };
-
+console.log("recipes",recipes)
   if (!Array.isArray(recipes) || recipes.length === 0) {
     return <div className="text-center text-gray-500 text-lg mt-10">No recipes found.</div>;
   }

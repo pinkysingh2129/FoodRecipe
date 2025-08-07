@@ -41,7 +41,9 @@ app.use(express.urlencoded({ extended: true  ,limit: "50mb" })); // Increase URL
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 app.use("/",require("./routes/user"))
 app.use("/recipe", require("./routes/recipe"));
-
+app.get("/", (req, res) => {
+  res.send("welcome to the server");
+});
 // Start Server
 app.listen(PORT, () => 
     console.log(`Server is running on port ${PORT}`)
