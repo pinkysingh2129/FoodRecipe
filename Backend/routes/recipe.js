@@ -10,6 +10,7 @@ const {
 } = require("../controller/recipe");
 const verifyToken = require("../middleware/auth");
 
+
 const router = express.Router();
 
 // ✅ PUBLIC: Home page — shows all recipes
