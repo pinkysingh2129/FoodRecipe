@@ -41,9 +41,13 @@ export default function RecipeItem({
     }
     if (onDelete) onDelete(id);
   };
-console.log("recipes",recipes)
+
   if (!Array.isArray(recipes) || recipes.length === 0) {
-    return <div className="text-center text-gray-500 text-lg mt-10">No recipes found.</div>;
+    return (
+      <div className="text-center text-gray-500 text-lg mt-10">
+        No recipes found.
+      </div>
+    );
   }
 
   return (
@@ -79,7 +83,7 @@ console.log("recipes",recipes)
             className="w-full h-48 object-cover"
             src={
               item.coverImage && item.coverImage.trim() !== ""
-                ? `https://foodrecipe-4xzl.onrender.com/uploads/${item.coverImage}`
+                ? item.coverImage // ✅ Direct Cloudinary URL
                 : fooding
             }
             alt="food"
@@ -90,7 +94,9 @@ console.log("recipes",recipes)
           />
 
           <div className="p-4">
-            <h3 className="text-xl font-semibold mb-2 text-green-600">{item.title || "Untitled Recipe"}</h3>
+            <h3 className="text-xl font-semibold mb-2 text-green-600">
+              {item.title || "Untitled Recipe"}
+            </h3>
 
             {item.ingredients && (
               <p className="text-gray-700 mb-2 text-sm">
