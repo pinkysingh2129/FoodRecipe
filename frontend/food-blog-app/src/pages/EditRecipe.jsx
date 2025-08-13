@@ -85,16 +85,25 @@ export default function EditRecipe() {
                             className="w-full px-4 py-2 border border-green-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                         />
                     </div>
-                    <div>
-                        <label className="block text-green-700 font-semibold mb-1">Ingredients</label>
-                        <textarea
-                            name="ingredients"
-                            rows="4"
-                            onChange={onHandleChange}
-                            value={recipeData.ingredients || ''}
-                            className="w-full px-4 py-2 border border-green-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                        ></textarea>
-                    </div>
+                   <div>
+    <label className="block text-green-700 font-semibold mb-1">Ingredients</label>
+    <textarea
+        name="ingredients"
+        rows={4}
+        onChange={(e) =>
+            setRecipeData((prev) => ({
+                ...prev,
+                ingredients: e.target.value
+                    .split(',')
+                    .map((item) => item.trim()) // remove spaces
+                    .filter((item) => item !== '') // remove empty entries
+            }))
+        }
+        value={recipeData.ingredients ? recipeData.ingredients.join(', ') : ''}
+        className="w-full px-4 py-2 border border-green-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+    />
+</div>
+
                     <div>
                         <label className="block text-green-700 font-semibold mb-1">Instructions</label>
                         <textarea
