@@ -10,28 +10,24 @@ const {
 } = require("../controller/recipe");
 const verifyToken = require("../middleware/auth");
 
-
 const router = express.Router();
 
-// ✅ PUBLIC: Home page — shows all recipes
+// Public: all recipes
 router.get("/", getRecipes);
 
-// ✅ Must come BEFORE "/:id"
-router.get("/my", verifyToken, getMyRecipes); // 🔄 moved here
+// My recipes (must be before "/:id")
+router.get("/my", verifyToken, getMyRecipes);
 
-// ✅ View single recipe by ID
+// Single recipe
 router.get("/:id", getRecipe);
 
-// ✅ Create recipe (only if logged in)
+// Create recipe
 router.post("/", verifyToken, upload.single("file"), addRecipe);
 
-// ✅ Update recipe
+// Update recipe
 router.put("/:id", upload.single("file"), editRecipe);
 
-// ✅ Delete recipe
+// Delete recipe
 router.delete("/:id", deleteRecipe);
 
-
-
-module.exports = router;
-
+module.exports = router; // ✅ important — export router directly

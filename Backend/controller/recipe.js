@@ -1,16 +1,15 @@
 const Recipes = require("../models/recipe");
 const multer = require("multer");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
-const cloudinary = require("../config/cloudinary"); // ✅ separate config file
+const cloudinary = require("../config/cloudinary");
 
 // ================= Multer + Cloudinary Storage =================
 const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
+  cloudinary,
   params: {
     folder: "recipes", // Cloudinary folder name
     allowed_formats: ["jpg", "jpeg", "png"],
-    public_id: (req, file) =>
-      Date.now() + "-" + file.originalname.split(".")[0], // unique name
+    public_id: (req, file) => Date.now() + "-" + file.originalname.replace(/\.[^/.]+$/, ""), // remove extension safely
   },
 });
 
@@ -56,12 +55,22 @@ const addRecipe = async (req, res) => {
       return res.status(400).json({ message: "Image file is required" });
     }
 
+    // ✅ Ensure ingredients is stored as an array
+    let fixedIngredients = ingredients;
+    if (typeof ingredients === "string") {
+      try {
+        fixedIngredients = JSON.parse(ingredients);
+      } catch {
+        fixedIngredients = ingredients.split(",").map(i => i.trim());
+      }
+    }
+
     const newRecipe = await Recipes.create({
       title,
-      ingredients,
+      ingredients: fixedIngredients,
       instructions,
       time,
-      coverImage: req.file.path, // ✅ Cloudinary returns a full URL
+      coverImage: req.file.path || req.file.secure_url, // ✅ store actual Cloudinary URL
       createdBy: req.user.id,
     });
 
@@ -83,11 +92,20 @@ const editRecipe = async (req, res) => {
     }
 
     const { title, ingredients, instructions, time } = req.body;
-    const coverImage = req.file?.path || recipe.coverImage;
+    const coverImage = req.file?.path || req.file?.secure_url || recipe.coverImage;
+
+    let fixedIngredients = ingredients;
+    if (typeof ingredients === "string") {
+      try {
+        fixedIngredients = JSON.parse(ingredients);
+      } catch {
+        fixedIngredients = ingredients.split(",").map(i => i.trim());
+      }
+    }
 
     const updated = await Recipes.findByIdAndUpdate(
       req.params.id,
-      { title, ingredients, instructions, time, coverImage },
+      { title, ingredients: fixedIngredients, instructions, time, coverImage },
       { new: true }
     );
 
@@ -127,6 +145,6 @@ module.exports = {
   addRecipe,
   editRecipe,
   deleteRecipe,
-  upload, // ✅ Multer middleware with Cloudinary
+  upload,
   getMyRecipes,
 };

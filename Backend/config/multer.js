@@ -1,5 +1,5 @@
 // backend/config/multer.js
-const multer = require("multer");
+const multer = require("multer");  
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 import cloudinary from "./cloudinary.js";
 

@@ -7,16 +7,19 @@ export default function EditRecipe() {
     const navigate = useNavigate();
     const { id } = useParams();
 
+    // Fetch existing recipe
     useEffect(() => {
         const getData = async () => {
             try {
-                const response = await axios.get(`https://foodrecipe-4xzl.onrender.com/recipe/${id}`);
-                const res = response.data;
+                const { data } = await axios.get(`https://foodrecipe-4xzl.onrender.com/recipe/${id}`);
                 setRecipeData({
-                    title: res.title,
-                    ingredients: res.ingredients.join(", "),
-                    instructions: res.instructions,
-                    time: res.time
+                    title: data.title || "",
+                    ingredients: Array.isArray(data.ingredients)
+                        ? data.ingredients.join(", ")
+                        : data.ingredients || "",
+                    instructions: data.instructions || "",
+                    time: data.time || "",
+                    existingImage: data.image || ""
                 });
             } catch (err) {
                 console.error("Error fetching recipe", err);
@@ -25,35 +28,50 @@ export default function EditRecipe() {
         getData();
     }, [id]);
 
+    // Handle input changes
     const onHandleChange = (e) => {
-        let val;
-        if (e.target.name === "ingredients") {
-            val = e.target.value;
-        } else if (e.target.name === "file") {
-            val = e.target.files[0];
-        } else {
-            val = e.target.value;
-        }
-        setRecipeData(prev => ({ ...prev, [e.target.name]: val }));
+        const { name, value, files } = e.target;
+        setRecipeData((prev) => ({
+            ...prev,
+            [name]: name === "file" ? files[0] : value
+        }));
     };
 
+    // Submit update
     const onHandleSubmit = async (e) => {
         e.preventDefault();
         const formData = new FormData();
+
         formData.append("title", recipeData.title);
         formData.append("time", recipeData.time);
-        formData.append("ingredients", JSON.stringify(recipeData.ingredients.split(",").map(i => i.trim())));
+
+        // Send ingredients as multiple fields (easier for backend parsing)
+        const ingredientsArray = recipeData.ingredients
+            .split(",")
+            .map(i => i.trim())
+            .filter(i => i);
+        ingredientsArray.forEach((ingredient, idx) => {
+            formData.append(`ingredients[${idx}]`, ingredient);
+        });
+
         formData.append("instructions", recipeData.instructions);
-        if (recipeData.file) formData.append("file", recipeData.file);
+
+        // Append new file if provided
+        if (recipeData.file) {
+            formData.append("file", recipeData.file);
+        }
 
         try {
-            await axios.put(`https://foodrecipe-4xzl.onrender.com/recipe/${id}`, formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                    "authorization": "bearer " + localStorage.getItem("token")
+            await axios.put(
+                `https://foodrecipe-4xzl.onrender.com/recipe/${id}`,
+                formData,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
                 }
-            });
-
+            );
             navigate("/myRecipes");
         } catch (err) {
             console.error("❌ Error updating recipe:", err.response?.data || err.message);
@@ -94,6 +112,7 @@ export default function EditRecipe() {
                             value={recipeData.ingredients || ''}
                             className="w-full px-4 py-2 border border-green-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                         ></textarea>
+                        <p className="text-xs text-gray-500 mt-1">Separate ingredients with commas.</p>
                     </div>
                     <div>
                         <label className="block text-green-700 font-semibold mb-1">Instructions</label>
@@ -113,6 +132,11 @@ export default function EditRecipe() {
                             onChange={onHandleChange}
                             className="w-full px-4 py-2 border border-green-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 bg-white"
                         />
+                        {recipeData.existingImage && !recipeData.file && (
+                            <p className="text-sm text-gray-500 mt-1">
+                                Current image will be kept unless you upload a new one.
+                            </p>
+                        )}
                     </div>
                     <button
                         type="submit"
